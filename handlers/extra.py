@@ -1,5 +1,6 @@
 from aiogram import types, Dispatcher
 from config import bot
+from asyncio import sleep
 
 
 # DRY - Don't Repeat Yourself
@@ -22,6 +23,8 @@ async def echo(message: types.Message):
 
     if message.text == "dice":
         a = await bot.send_dice(message.chat.id, emoji="🎲")
+        await sleep(3)
+        await message.answer("2113131")
         # print(a.dice.value)
 
 

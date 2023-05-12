@@ -2,11 +2,12 @@ from aiogram.utils import executor
 import logging
 
 from config import dp
-from handlers import commands, extra, callback, admin
+from handlers import commands, extra, callback, admin, forms
 
 commands.register_handlers_commands(dp)
 callback.register_handlers_callback(dp)
 admin.register_handlers_admin(dp)
+forms.register_handlers_forms(dp)
 
 extra.register_handlers_extra(dp)
 

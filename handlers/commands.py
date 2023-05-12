@@ -1,12 +1,14 @@
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from config import bot
+from .keyboards import start_markup
 
 
 # @dp.message_handler(commands=['start', 'help'])
 async def start_handler(message: types.Message):
     # if message.text == "/help":
-    await message.answer(f"Салалекум {message.from_user.full_name}")
+    await message.answer(f"Салалекум {message.from_user.full_name}",
+                         reply_markup=start_markup)
 
 
 # @dp.message_handler(commands=['quiz'])
