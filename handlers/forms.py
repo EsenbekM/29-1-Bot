@@ -1,8 +1,11 @@
+from sqlite3 import IntegrityError
+
 from aiogram import types, Dispatcher
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from . import keyboards
+from database.bot_db import sql_command_insert
 
 
 class FSMAdmin(StatesGroup):
@@ -71,9 +74,13 @@ async def load_photo(message: types.Message, state: FSMContext):
 
 async def submit(message: types.Message, state: FSMContext):
     if message.text.lower() == "да":
-        # TODO: Запись в БД
+        try:
+            await sql_command_insert(state)
+            await message.answer("Все свободен!")
+        except IntegrityError:
+            await message.answer("У тебя уже есть анкета йоу!")
         await state.finish()
-        await message.answer("Все свободен!")
+
     elif message.text.lower() == "заново":
         await FSMAdmin.name.set()
         await message.answer("Как звать?")
