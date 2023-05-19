@@ -3,6 +3,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from config import bot, ADMINS
 from database.bot_db import sql_command_delete, sql_command_all
 
+
 async def ban(message: types.Message):
     if message.chat.type != "private":
         if message.from_user.id not in ADMINS:

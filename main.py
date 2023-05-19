@@ -1,12 +1,14 @@
 from aiogram.utils import executor
 import logging
+import asyncio
 
 from config import dp, bot, ADMINS
-from handlers import commands, extra, callback, admin, forms
+from handlers import commands, extra, callback, admin, forms, notifications
 from database.bot_db import sql_create
 
 
 async def on_startup(dp):
+    asyncio.create_task(notifications.set_scheduler())
     await bot.send_message(ADMINS[0], "Я родился!")
     sql_create()
 
