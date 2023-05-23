@@ -1,8 +1,9 @@
 from aiogram import types, Dispatcher
-from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from config import bot
 from .keyboards import start_markup
 from database.bot_db import sql_command_random
+from parser.afisha import parser
 
 
 # @dp.message_handler(commands=['start', 'help'])
@@ -53,9 +54,27 @@ async def get_user(message: types.Message):
     )
 
 
+async def afisha_handler(message: types.Message):
+    for data in parser():
+        await message.answer_photo(
+            data['img'],
+            caption=f"<a href='{data['url']}'>{data['title']}</a>\n"
+                    f"<b>{data['status']}</b>\n"
+                    f"#Y{data['year']}\n"
+                    f"#{data['country']}\n"
+                    f"#{data['genre']}\n",
+            reply_markup=InlineKeyboardMarkup().add(
+                InlineKeyboardButton("Смотреть ->", url=data['url'])
+            ),
+            parse_mode=ParseMode.HTML
+
+        )
+
+
 def register_handlers_commands(dp: Dispatcher):
     dp.register_message_handler(start_handler, commands=['start', 'help'])
     dp.register_message_handler(quiz_1, commands=['quiz'])
     dp.register_message_handler(info_handler, commands=['info'])
     dp.register_message_handler(get_user, commands=['get'])
+    dp.register_message_handler(afisha_handler, commands=['parser'])
 

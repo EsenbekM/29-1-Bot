@@ -8,7 +8,7 @@ from database.bot_db import sql_create
 
 
 async def on_startup(dp):
-    asyncio.create_task(notifications.set_scheduler())
+    # asyncio.create_task(notifications.set_scheduler())
     await bot.send_message(ADMINS[0], "Я родился!")
     sql_create()
 
