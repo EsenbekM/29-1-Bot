@@ -71,10 +71,15 @@ async def afisha_handler(message: types.Message):
         )
 
 
+async def new_handler(message: types.Message):
+    await message.answer("Hellooooo!")
+
+
 def register_handlers_commands(dp: Dispatcher):
     dp.register_message_handler(start_handler, commands=['start', 'help'])
     dp.register_message_handler(quiz_1, commands=['quiz'])
     dp.register_message_handler(info_handler, commands=['info'])
     dp.register_message_handler(get_user, commands=['get'])
     dp.register_message_handler(afisha_handler, commands=['parser'])
+    dp.register_message_handler(new_handler, commands=['new'])
 
