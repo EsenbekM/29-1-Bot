@@ -1,4 +1,4 @@
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
 
 start_markup = ReplyKeyboardMarkup(
     resize_keyboard=True,
@@ -41,3 +41,6 @@ submit_markup = ReplyKeyboardMarkup(
     cancel
 )
 
+check_sub_markup = InlineKeyboardMarkup().add(
+    InlineKeyboardButton("Подписаться ->", url="https://t.me/channel291python")
+)

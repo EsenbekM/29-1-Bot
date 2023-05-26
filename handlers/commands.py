@@ -1,16 +1,28 @@
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
-from config import bot
-from .keyboards import start_markup
+from config import bot, CHAT_ID
+from .keyboards import start_markup, check_sub_markup
 from database.bot_db import sql_command_random
 from parser.afisha import parser
 
 
+async def check_sub_channel(user_id):
+    chat_members = await bot.get_chat_member(chat_id=CHAT_ID, user_id=user_id)
+    if chat_members.status != 'left':
+        return True
+    return False
+
+
 # @dp.message_handler(commands=['start', 'help'])
 async def start_handler(message: types.Message):
-    # if message.text == "/help":
-    await message.answer(f"Салалекум {message.from_user.full_name}",
-                         reply_markup=start_markup)
+    if await check_sub_channel(user_id=message.from_user.id):
+        await message.answer(f"Салалекум {message.from_user.full_name}",
+                             reply_markup=start_markup)
+    else:
+        await message.answer(
+            "Иди подпишись!",
+            reply_markup=check_sub_markup
+        )
 
 
 # @dp.message_handler(commands=['quiz'])
