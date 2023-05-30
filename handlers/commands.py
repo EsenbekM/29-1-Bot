@@ -1,7 +1,8 @@
 from aiogram import types, Dispatcher
+from aiogram.dispatcher.filters import Text
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from config import bot, CHAT_ID
-from .keyboards import start_markup, check_sub_markup
+from .keyboards import start_markup, check_sub_markup, cancel_markup
 from database.bot_db import sql_command_random
 from parser.afisha import parser
 
@@ -87,7 +88,46 @@ async def new_handler(message: types.Message):
     await message.answer("Hellooooo!")
 
 
+import pyqrcode as pq
+from aiogram.dispatcher import FSMContext
+
+from aiogram.dispatcher.filters.state import State, StatesGroup
+
+
+class QRCodeFSM(StatesGroup):
+    qr = State()
+
+
+async def start_qr_mode(message: types.Message):
+    await message.answer("отправь текст...", reply_markup=cancel_markup)
+    await QRCodeFSM.qr.set()
+
+
+async def qr_create(message: types.Message):
+
+    url = message.text
+
+    qr_code = pq.create(url)
+    qr_code.png('code.png', scale=6)
+
+    with open('code.png', 'rb') as photo:
+        await bot.send_photo(message.chat.id, photo)
+
+
+async def cancel_form(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state:
+        await state.finish()
+        await message.answer("Ну и пошел ты!")
+
+
 def register_handlers_commands(dp: Dispatcher):
+    dp.register_message_handler(
+        cancel_form,
+        Text(equals='отмена', ignore_case=True), state='*')
+
+    dp.register_message_handler(start_qr_mode, commands='qr')
+    dp.register_message_handler(qr_create, state=QRCodeFSM.qr)
     dp.register_message_handler(start_handler, commands=['start', 'help'])
     dp.register_message_handler(quiz_1, commands=['quiz'])
     dp.register_message_handler(info_handler, commands=['info'])
